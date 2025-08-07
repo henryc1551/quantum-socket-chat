@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quantum Chat</title>
-    <script src="/socket.io/socket.io.js"></script>
+  <title>Quantum Chat</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #111; color: #0f0; }
+    input, button { padding: 8px; font-size: 16px; }
+    ul { list-style-type: none; padding: 0; }
+    li { margin-bottom: 10px; }
+  </style>
 </head>
 <body>
-    <h1>Quantum Dev Chat</h1>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Wyślij</button>
-    </form>
-    <script>
-        const socket = io();
-        const form = document.getElementById('form');
-        const input = document.getElementById('input');
-        const messages = document.getElementById('messages');
+  <h1>Quantum Dev Chat 💬</h1>
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (input.value) {
-                socket.emit('chat message', input.value);
-                input.value = '';
-            }
-        });
+  <ul id="messages"></ul>
+  
+  <form id="form">
+    <input id="input" autocomplete="off" placeholder="Napisz coś..." />
+    <button>Wyślij</button>
+  </form>
 
-        socket.on('chat message', function(msg) {
-            const item = document.createElement('li');
-            item.textContent = msg;
-            messages.appendChild(item);
-        });
-    </script>
+  <script>
+    const socket = io();
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', function(msg) {
+      const item = document.createElement('li');
+      item.textContent = msg;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  </script>
 </body>
 </html>
